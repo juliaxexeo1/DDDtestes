@@ -183,7 +183,7 @@ class PacienteLogin(MethodView):
         senha = dados.get('senha')
 
         paciente=Paciente.query.filter_by(email = email).first()
-        if (not paciente) or (not bcrypt.checkpw (senha.encode(), paciente.senha_hash)): 
+        if ((not paciente) or (not bcrypt.checkpw(senha.encode(), paciente.senha_hash))): 
             return{'error':'email ou senha invalidos'},400
         
         token = create_access_token(identity = paciente.id)

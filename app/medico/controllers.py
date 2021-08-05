@@ -194,7 +194,7 @@ class MedicoLogin(MethodView):
         senha = dados.get('senha')
 
         medico=Medico.query.filter_by(email = email).first()
-        if (not medico) or (not bcrypt.checkpw (senha.encode(), medico.senha_hash)): 
+        if (not medico) or (not bcrypt.checkpw(senha.encode(), medico.senha_hash)): 
             return{'error':'email ou senha invalidos'},400
         
         token = create_access_token(identity = medico.id)
