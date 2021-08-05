@@ -7,8 +7,7 @@ class Medico(db.Model):
     cpf=db.Column(db.String(30),nullable=False, unique=True)
     especialidade=db.Column(db.String(100),nullable=False)
     email=db.Column(db.String(100),nullable=False, unique=True)
-    senha_hash = db.Column(db.String(300),nullable=False)
-
+    senha_hash = db.Column(db.LargeBinary(128))
 
     def json(self):
         return{
