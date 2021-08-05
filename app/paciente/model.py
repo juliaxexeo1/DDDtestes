@@ -31,7 +31,7 @@ class Paciente(db.Model):
         self.senha_hash = bcrypt.hashpw(
             senha.encode(), bcrypt.gensalt())
 
-    def verify_password(self, senha: str) -> bool:
+    def verify_senha(self, senha: str) -> bool:
         return bcrypt.checkpw(senha.encode(), self.senha_hash)
 
     def token(self) -> str:
