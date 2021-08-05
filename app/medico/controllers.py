@@ -199,3 +199,5 @@ class MedicoLogin(MethodView):
         
         token = create_access_token(identity = medico.id)
         return {"token":token},200
+
+

@@ -51,9 +51,10 @@ class PacienteCreate(MethodView):#'/cliente/create'
 
 
 
-        senha_hash = bcrypt.hashpw(senha.encode(),bcrypt.gensalt())
+        #senha_hash = bcrypt.hashpw(senha.encode(),bcrypt.gensalt())
 
-        paciente = Paciente(nome=nome,cpf=cpf,data_de_nascimento=data_de_nascimento,email=email,senha_hash=senha_hash)
+        paciente = Paciente(nome=nome,cpf=cpf,data_de_nascimento=data_de_nascimento,email=email)
+        paciente.senha=senha
         db.session.add(paciente)
         db.session.commit()
 
@@ -187,7 +188,7 @@ class PacienteLogin(MethodView):#/paciente/login
         if not isinstance(senha,str): return {"Erro": "Dado da senha não está tipado como String"},400
         
         paciente = Paciente.query.filter_by(email=email).first()
-        if not paciente or not bcrypt.checkpw(senha.encode(),paciente.senha_hash): 
+        if not paciente or not paciente.verify_senha(senha): 
             return {"Erro":"Email ou Senha Inválidos"},403
         token = create_access_token(identity= paciente.id)
         return {"token":token},200

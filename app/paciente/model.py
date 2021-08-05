@@ -1,4 +1,6 @@
-from app.extensions import db
+from app.extensions import db,jwt
+import bcrypt
+from flask_jwt_extended import create_access_token
 
 class Paciente(db.Model):
     __tablename__='paciente'
@@ -20,4 +22,18 @@ class Paciente(db.Model):
 
     
 
+    @property
+    def senha(self):
+        raise AttributeError('password is not a readable attribute')
 
+    @senha.setter
+    def senha(self, senha) -> None:
+        self.senha_hash = bcrypt.hashpw(
+            senha.encode(), bcrypt.gensalt())
+
+    def verify_password(self, senha: str) -> bool:
+        return bcrypt.checkpw(senha.encode(), self.senha_hash)
+
+    def token(self) -> str:
+        return create_access_token(
+            identity=self.id)
