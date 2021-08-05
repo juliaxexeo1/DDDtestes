@@ -174,17 +174,20 @@ class PacienteDetails(MethodView):#'/paciente/details/<int:id>'
         return paciente.json(),200
 
 
-class PacienteLogin(MethodView):
+
+
+class PacienteLogin(MethodView):#/paciente/login
     def post(self):
+        """pos(self)-> dict,int
+        Faz o sistema de login de um médico"""
         dados = request.json
-
-           
-        email = dados.get('email')
-        senha = dados.get('senha')
-
-        paciente=Paciente.query.filter_by(email = email).first()
-        if ((not paciente) or (not bcrypt.checkpw(senha.encode(), paciente.senha_hash))): 
-            return{'error':'email ou senha invalidos'},400
+        email = dados.get("email")
+        senha = dados.get("senha")
+        if not isinstance(email,str): return {"Erro": "Dado do email não está tipado como String"},400
+        if not isinstance(senha,str): return {"Erro": "Dado da senha não está tipado como String"},400
         
-        token = create_access_token(identity = paciente.id)
+        paciente = Paciente.query.filter_by(email=email).first()
+        if not paciente or not bcrypt.checkpw(senha.encode(),paciente.senha_hash): 
+            return {"Erro":"Email ou Senha Inválidos"},403
+        token = create_access_token(identity= paciente.id)
         return {"token":token},200
